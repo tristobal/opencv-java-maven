@@ -2,6 +2,8 @@ package cl.tristobal.opencv;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
 import org.opencv.imgcodecs.Imgcodecs;
@@ -11,18 +13,20 @@ import org.opencv.videoio.VideoCapture;
 import java.io.ByteArrayInputStream;
 
 public class FrameGrabberRunnable implements Runnable {
-    private VideoCapture capture;
+    private VideoCapture videoCapture;
 
-    private ImageView currentFrame;
+    private ImageView imageView;
 
-    public FrameGrabberRunnable(VideoCapture videoCapture, ImageView imageView) {
-        capture = videoCapture;
-        currentFrame = imageView;
+    private static Logger logger = LogManager.getLogger(FrameGrabberRunnable.class);
+
+    public FrameGrabberRunnable(VideoCapture capture, ImageView image) {
+        videoCapture = capture;
+        imageView = image;
     }
 
     public void run() {
         Image imageToShow = grabFrame();
-        currentFrame.setImage(imageToShow);
+        imageView.setImage(imageToShow);
     }
 
     /**
@@ -34,22 +38,16 @@ public class FrameGrabberRunnable implements Runnable {
         Image imageToShow = null;
         Mat frame = new Mat();
 
-        // check if the capture is open
-        if (capture.isOpened()) {
+        if (videoCapture.isOpened()) {
             try {
-                // read the current frame
-                capture.read(frame);
-
-                // if the frame is not empty, process it
+                videoCapture.read(frame);
                 if (!frame.empty()) {
-                    // convert the image to gray scale
                     Imgproc.cvtColor(frame, frame, Imgproc.COLOR_BGR2GRAY);
-                    // convert the Mat object (OpenCV) to Image (JavaFX)
-                    imageToShow = mat2Image(frame);
+                    imageToShow = matObjectToImageJavaFX(frame);
                 }
 
             } catch (Exception e) {
-                System.err.println("Exception during the image elaboration: " + e);
+                logger.error("Exception during the image elaboration", e);
             }
         }
 
@@ -62,13 +60,9 @@ public class FrameGrabberRunnable implements Runnable {
      * @param frame the {@link Mat} representing the current frame
      * @return the {@link Image} to show
      */
-    private Image mat2Image(Mat frame) {
-        // create a temporary buffer
+    private Image matObjectToImageJavaFX(Mat frame) {
         MatOfByte buffer = new MatOfByte();
-        // encode the frame in the buffer
         Imgcodecs.imencode(".png", frame, buffer);
-        // build and return an Image created from the image encoded in the
-        // buffer
         return new Image(new ByteArrayInputStream(buffer.toArray()));
     }
 }

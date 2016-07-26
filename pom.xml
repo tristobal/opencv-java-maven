@@ -23,16 +23,27 @@
       </dependency>
 
       <dependency>
-          <groupId>org.opencvjar</groupId>
-          <artifactId>opencvjar-osx</artifactId>
+          <groupId>org.opencv</groupId>
+          <artifactId>opencv-linux</artifactId>
           <version>3.1.0</version>
       </dependency>
 
       <dependency>
-          <groupId>org.opencvjar</groupId>
-          <artifactId>opencvjar-runtime</artifactId>
+          <groupId>org.opencv</groupId>
+          <artifactId>opencv-runtime</artifactId>
           <version>3.1.0</version>
-          <classifier>natives-osx-x86_64</classifier>
+          <classifier>natives-linux-x86_64</classifier>
+      </dependency>
+
+      <dependency>
+          <groupId>org.apache.logging.log4j</groupId>
+          <artifactId>log4j-api</artifactId>
+          <version>2.6.1</version>
+      </dependency>
+      <dependency>
+          <groupId>org.apache.logging.log4j</groupId>
+          <artifactId>log4j-core</artifactId>
+          <version>2.6.1</version>
       </dependency>
 
       <dependency>

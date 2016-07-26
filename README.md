@@ -8,15 +8,16 @@ http://docs.opencv.org/3.1.0/df/d65/tutorial_table_of_content_introduction.html
 
 Instalar el jar en repositorio local
 ```
-mvn install:install-file -Dfile=opencv-310.jar -DgroupId=org.opencvjar -DartifactId=opencvjar-osx -Dversion=3.1.0 -Dpackaging=jar
+mvn install:install-file -Dfile=opencv-310.jar -DgroupId=org.opencv -DartifactId=opencv-linux -Dversion=3.1.0 -Dpackaging=jar
 ```
 
 Comprimir la librería nativa, renombrar a jar e instalar en repositorio local.
 ```
-#Para este ejemplo se trabajó en OSX por lo que se generó el jar con libopencv_java310.dylib
-zip opencvjar-runtime-3.1.0-natives-osx-x86_64.zip libopencv_java310.so
-mv opencvjar-runtime-3.1.0-natives-osx-x86_64.zip opencvjar-runtime-3.1.0-natives-osx-x86_64.jar
-mvn install:install-file -Dfile=opencvjar-runtime-3.1.0-natives-osx-x86_64.jar -DgroupId=org.opencvjar -DartifactId=opencvjar-runtime -Dversion=3.1.0 -Dpackaging=jar -Dclassifier=natives-osx-x86_64
+zip opencvjar-runtime-3.1.0-natives-linux-x86_64.zip libopencv_java310.so
+# Para OSX tuve problemas con la librería .so y debió ser renombrada a .dylib
+mv opencvjar-runtime-3.1.0-natives-linux-x86_64.zip opencvjar-runtime-3.1.0-natives-linux-x86_64.jar
+mvn install:install-file -Dfile=opencvjar-runtime-3.1.0-natives-linux-x86_64.jar -DgroupId=org.opencv -DartifactId=opencv-runtime -Dversion=3.1.0 -Dpackaging=jar -Dclassifier=natives-linux-x86_64
+
 ```
 
 Instalar el jar de JavaFX, en el repo local, para que Maven pueda compilar con él
@@ -33,16 +34,16 @@ Hecho todo lo anterior, el POM del proyecto debe tener las siguientes dependenci
       </dependency>
 
       <dependency>
-          <groupId>org.opencvjar</groupId>
-          <artifactId>opencvjar-osx</artifactId>
+          <groupId>org.opencv</groupId>
+          <artifactId>opencv-linux</artifactId>
           <version>3.1.0</version>
       </dependency>
 
       <dependency>
-          <groupId>org.opencvjar</groupId>
-          <artifactId>opencvjar-runtime</artifactId>
+          <groupId>org.opencv</groupId>
+          <artifactId>opencv-runtime</artifactId>
           <version>3.1.0</version>
-          <classifier>natives-osx-x86_64</classifier>
+          <classifier>natives-linux-x86_64</classifier>
       </dependency>
 ```
 

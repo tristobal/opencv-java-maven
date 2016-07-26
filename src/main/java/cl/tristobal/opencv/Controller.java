@@ -4,6 +4,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.opencv.videoio.VideoCapture;
 
 import java.util.concurrent.Executors;
@@ -11,6 +13,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class Controller {
+
+    private static Logger logger = LogManager.getLogger(Controller.class);
 
     @FXML
     private Button cameraButton;
@@ -44,13 +48,12 @@ public class Controller {
 
                 // grab a frame every 33 ms (30 frames/sec)
                 FrameGrabberRunnable frameGrabber = new FrameGrabberRunnable(capture, currentFrame);
-
                 timer = Executors.newSingleThreadScheduledExecutor();
                 timer.scheduleAtFixedRate(frameGrabber, 0, 33, TimeUnit.MILLISECONDS);
 
                 cameraButton.setText("Stop Camera");
             } else {
-                System.err.println("Impossible to open the camera connection...");
+                logger.error("Impossible to open the camera connection...");
             }
         } else {
             isNotCameraActive = true;
@@ -62,7 +65,7 @@ public class Controller {
                 timer.awaitTermination(33, TimeUnit.MILLISECONDS);
             }
             catch (InterruptedException e) {
-                System.err.println("Exception in stopping the frame capture, trying to release the camera now... " + e);
+                logger.error("Exception in stopping the frame capture, trying to release the camera now... ", e);
             }
 
             capture.release();
